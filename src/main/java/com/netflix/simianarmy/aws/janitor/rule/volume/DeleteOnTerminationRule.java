@@ -20,7 +20,6 @@ package com.netflix.simianarmy.aws.janitor.rule.volume;
 import com.netflix.simianarmy.MonkeyCalendar;
 import com.netflix.simianarmy.Resource;
 import com.netflix.simianarmy.aws.janitor.crawler.edda.EddaEBSVolumeJanitorCrawler;
-import com.netflix.simianarmy.janitor.Rule;
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ import java.util.Date;
  * NOTE: since the information came from the history, the rule will work only if Edda is enabled
  * for Janitor Monkey.
  */
-public class DeleteOnTerminationRule extends VolumeRule implements Rule {
+public class DeleteOnTerminationRule extends VolumeRule  {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteOnTerminationRule.class);
@@ -65,14 +64,9 @@ public class DeleteOnTerminationRule extends VolumeRule implements Rule {
         this.retentionDays = retentionDays;
     }
 
+
     @Override
-    public boolean isValid(Resource resource) {
-        Boolean valid = super.isValidResource(resource);
-
-        if(valid != null){
-            return valid;
-        }
-
+    public boolean isValidResource(Resource resource) {
         if ("true".equals(resource.getAdditionalField(EddaEBSVolumeJanitorCrawler.DELETE_ON_TERMINATION))) {
             if (resource.getExpectedTerminationTime() == null) {
                 Date terminationTime = calendar.getBusinessDay(calendar.now().getTime(), retentionDays);

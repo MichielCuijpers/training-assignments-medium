@@ -69,13 +69,7 @@ public class OldDetachedVolumeRule extends VolumeRule implements Rule {
     }
 
     @Override
-    public boolean isValid(Resource resource) {
-        Boolean valid = super.isValidResource(resource);
-
-        if(valid != null){
-            return valid;
-        }
-
+    public boolean isValidResource(Resource resource) {
         String janitorMetaTag = resource.getTag(JanitorMonkey.JANITOR_META_TAG);
         if (janitorMetaTag == null) {
             LOGGER.info(String.format("Volume %s is not tagged with the Janitor meta information, ignore.",

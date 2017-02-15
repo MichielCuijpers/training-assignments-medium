@@ -3,6 +3,7 @@ package com.netflix.simianarmy.aws.janitor.rule.volume;
 import com.netflix.simianarmy.Resource;
 import com.netflix.simianarmy.aws.AWSResource;
 import com.netflix.simianarmy.janitor.JanitorMonkey;
+import com.netflix.simianarmy.janitor.Rule;
 import org.apache.commons.lang.Validate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -14,15 +15,18 @@ import java.util.Date;
 /**
  * Created by Erwin on 12/01/2017.
  */
-public class VolumeRule {
+public abstract class VolumeRule implements Rule {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VolumeRule.class);
 
-    /** The date format used to print or parse the user specified termination date. **/
+    /**
+     * The date format used to print or parse the user specified termination date.
+     **/
     public static final DateTimeFormatter TERMINATION_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
 
 
-    public Boolean isValidResource(Resource resource) {
+    @Override
+    public boolean isValid(Resource resource) {
         Validate.notNull(resource);
         if (!resource.getResourceType().name().equals("EBS_VOLUME")) {
             return true;
@@ -50,6 +54,11 @@ public class VolumeRule {
                 LOGGER.error(String.format("The janitor tag is not a user specified date: %s", janitorTag));
             }
         }
-        return null;
+        return isValidResource(resource);
     }
+
+    protected abstract boolean isValidResource(Resource resource);
 }
+
+
+
